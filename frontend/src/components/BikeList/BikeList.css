@@ -1,0 +1,188 @@
+:root {
+  --font-primary: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+}
+
+.bike-list-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Сетка карточек */
+.bike-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  justify-items: center;
+}
+
+/* Карточка */
+.bike-card-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  overflow: hidden;
+}
+
+.bike-card {
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+}
+
+.bike-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* Изображение */
+.bike-image-container {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  border-bottom: 1px solid #eee;
+  position: relative;
+}
+
+.bike-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 0.5rem;
+}
+
+/* Информация о велосипеде */
+.bike-info {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.bike-name {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2d3748;
+  line-height: 1.3;
+}
+
+.bike-price {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin: 0;
+}
+
+/* Спецификации */
+.bike-specs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+
+.bike-spec {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin: 0;
+  background: #f8f9fa;
+  padding: 0.6rem;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.spec-label {
+  color: #718096;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.spec-value {
+  color: #2d3748;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Кнопка сохранения */
+.save-button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #ffffff;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  z-index: 10;
+}
+
+.save-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.save-button svg {
+  color: #e74c3c;
+  font-size: 20px;
+}
+
+/* Состояния */
+.loading-spinner {
+  text-align: center;
+  padding: 2rem;
+  color: #718096;
+}
+
+.error-message {
+  color: #e74c3c;
+  text-align: center;
+  padding: 2rem;
+}
+
+.no-bikes-message {
+  text-align: center;
+  padding: 2rem;
+  color: #718096;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .bike-specs {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+
+  .bike-spec {
+    padding: 0.6rem;
+  }
+
+  .spec-value {
+    font-size: 0.85rem;
+  }
+
+  .bike-image-container {
+    height: 180px;
+  }
+}

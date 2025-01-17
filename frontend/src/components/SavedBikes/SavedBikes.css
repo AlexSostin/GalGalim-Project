@@ -1,0 +1,228 @@
+.saved-bikes-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.saved-bikes-container h2 {
+  font-size: 2rem;
+  color: #2d3748;
+  margin-bottom: 30px;
+}
+
+.saved-bikes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+.saved-bike-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+.saved-bike-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.saved-bike-image {
+  height: 200px;
+  width: 100%;
+}
+
+.saved-bike-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.saved-bike-info {
+  padding: 1rem;
+}
+
+.saved-bike-name {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.saved-bike-price {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.saved-bike-specs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.spec-item {
+  background: #f8f9fa;
+  border-radius: 6px;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.spec-label {
+  color: #718096;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.spec-value {
+  color: #2d3748;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.saved-bike-location {
+  margin-top: 1rem;
+  padding: 0.5rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.saved-bike-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #edf2f7;
+}
+
+.view-details-btn {
+  flex: 1;
+  padding: 8px 16px;
+  background: #3182ce;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  text-align: center;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+.view-details-btn:hover {
+  background: #2c5282;
+}
+
+.remove-bike-btn {
+  width: 50px;
+  height: 50px;
+  background: #ff6b6b;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(255, 107, 107, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.remove-bike-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.5);
+}
+
+.remove-bike-btn svg {
+  color: white;
+  font-size: 18px;
+}
+
+.message-seller-btn {
+  width: 50px;
+  height: 50px;
+  background: #4caf50;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(76, 175, 80, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.message-seller-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.5);
+}
+
+.message-seller-btn svg {
+  color: white;
+  font-size: 18px;
+}
+
+.no-bikes-message {
+  text-align: center;
+  padding: 50px;
+  font-size: 1.2rem;
+  color: #718096;
+  background: #f8fafc;
+  border-radius: 12px;
+  margin-top: 20px;
+}
+
+.loading,
+.error {
+  text-align: center;
+  padding: 30px;
+  border-radius: 12px;
+  background: #f8fafc;
+  color: #718096;
+}
+
+.error {
+  color: #e74c3c;
+  background: #fff5f5;
+}
+
+/* Адаптивность */
+@media (max-width: 1024px) {
+  .saved-bikes-grid {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .saved-bikes-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .saved-bike-card {
+    height: 180px;
+  }
+
+  .saved-bike-name {
+    font-size: 1.1rem;
+  }
+
+  .saved-bike-price {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .saved-bikes-container {
+    padding: 20px 15px;
+  }
+
+  .saved-bike-card {
+    height: 160px;
+  }
+
+  .saved-bike-info {
+    padding: 15px;
+  }
+}

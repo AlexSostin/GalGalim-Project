@@ -1,0 +1,236 @@
+/* Основные стили контейнера формы */
+.add-bike-form-container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.form-header h2 {
+  color: #333;
+}
+
+.form-header p {
+  color: #666;
+}
+
+.add-bike-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.form-section {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+}
+
+.form-section h3 {
+  color: #333;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #444;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out;
+  height: 38px;
+}
+
+.form-control.is-invalid {
+  border-color: #dc3545;
+}
+
+.invalid-feedback {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 80%;
+  color: #dc3545;
+}
+
+.select-invalid .select__control {
+  border-color: #dc3545;
+}
+
+/* Анимация для ошибок */
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-10px);
+  }
+  75% {
+    transform: translateX(10px);
+  }
+}
+
+.is-invalid {
+  animation: shake 0.4s ease-in-out;
+}
+
+.file-input {
+  border: 2px dashed #ccc;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+}
+
+.image-preview-container {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.image-preview {
+  width: 150px;
+  height: 150px;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #ccc;
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.error-message {
+  background-color: #fff3f3;
+  color: #dc3545;
+  padding: 1rem;
+  border-radius: 4px;
+  border: 1px solid #ffcdd2;
+  margin-bottom: 1rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.submit-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.submit-button:hover {
+  background-color: #0056b3;
+}
+
+.submit-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .add-bike-form-container {
+    margin: 10px;
+    padding: 15px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Стили для полей ввода */
+.form-group.price-field,
+.form-group.location-field,
+.form-group.city-field,
+.form-group.street-field,
+.form-group.category-field {
+  width: 100%;
+}
+
+/* Унифицируем все поля ввода */
+.form-group input,
+.form-group select,
+.form-group textarea,
+.form-group .select__control {
+  width: 100%;
+  min-height: 48px; /* меняем height на min-height для textarea */
+  padding: 12px; /* увеличиваем padding для лучшей читаемости */
+  border: 1px solid #ced4da;
+  border-radius: 6px; /* увеличиваем радиус для современного вида */
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: all 0.2s ease; /* плавное изменение при фокусе */
+}
+
+/* Стили при наведении и фокусе */
+.form-group input:hover,
+.form-group select:hover,
+.form-group textarea:hover,
+.form-group .select__control:hover {
+  border-color: #adb5bd;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus,
+.form-group .select__control--is-focused {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  outline: none;
+}
+
+/* Исправляем высоту textarea */
+.form-group textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.select__value-container {
+  padding: 2px 8px;
+  height: 46px;
+}
+
+.select__single-value {
+  line-height: 46px;
+}
+
+.select__placeholder,
+.form-control::placeholder {
+  line-height: 46px;
+}

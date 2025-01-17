@@ -1,0 +1,551 @@
+:root {
+  --header-height: 60px;
+  --container-width: 1200px;
+  --background-color: #f4f4f4;
+  --primary-color: #007bff;
+  --secondary-color: #6c757d;
+  --light-text: #ffffff;
+  --accent-color: #28a745;
+  --accent-color-dark: #218838;
+  --text-primary: #343a40;
+  --spacing-md: 1rem;
+}
+
+/* Современный, профессиональный хедер */
+.header {
+  background-color: rgba(44, 62, 80, 0.98);
+  backdrop-filter: blur(10px);
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.header-container {
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 60px;
+}
+
+/* Поисковая строка */
+.search-bar {
+  flex: 1;
+  max-width: 500px;
+  margin: 0 2rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: white;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.search-input:focus {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--accent-color);
+  outline: none;
+}
+
+.search-button {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.search-button:hover {
+  color: var(--accent-color);
+}
+
+/* Стилизация логотипа */
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--light-text);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.logo:hover {
+  color: var(--accent-color);
+  transform: translateY(-1px);
+}
+
+/* Основное навигационное меню */
+.nav-menu {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.nav-link {
+  color: var(--light-text);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+/* Эффект подчеркивания для ссылок */
+.nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background-color: var(--accent-color);
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+  width: 70%;
+}
+
+.nav-link:hover {
+  color: var(--accent-color);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Выпадающее меню */
+.dropdown {
+  position: relative;
+}
+
+.dropdown-content {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  background: white;
+  min-width: 200px;
+  width: max-content;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  padding: 0.5rem 0;
+  z-index: 110;
+}
+
+.dropdown:hover .dropdown-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-item {
+  color: var(--text-primary);
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Центрируем текст */
+  gap: 0.5rem;
+  background: #f9f9f9; /* Светлый фон */
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-item:first-child {
+  border-radius: 12px 12px 0 0;
+}
+
+.dropdown-item:last-child {
+  border-radius: 0 0 12px 12px;
+}
+
+.dropdown-item:hover {
+  background: var(--accent-color); /* Акцентный цвет */
+  color: white; /* Белый текст */
+  transform: translateY(-2px); /* Лёгкое приподнимание */
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: #ddd;
+  margin: 0.5rem 0;
+}
+
+/* Кнопка мобильного меню */
+.mobile-menu-button {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--light-text);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-button:hover {
+  color: var(--accent-color);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .search-bar {
+    display: none; /* Скрываем поиск на мобильных */
+  }
+
+  .mobile-menu-button {
+    display: block;
+  }
+
+  .nav-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(44, 62, 80, 0.98);
+    padding: 1rem;
+    flex-direction: column;
+    gap: 0; /* Убрал отступы между пунктами меню */
+    display: none; /* Скрываем меню по умолчанию */
+  }
+
+  .nav-link {
+    width: 100%;
+    text-align: center;
+    padding: 0.75rem;
+  }
+
+  .dropdown-content {
+    position: static;
+    width: 100%;
+    min-width: 100%;
+    box-shadow: none;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 0;
+    margin-top: 0.5rem;
+  }
+
+  .dropdown:hover .dropdown-content {
+    display: flex;
+    flex-direction: column;
+    opacity: 1;
+    visibility: visible;
+  }
+  .nav-link,
+  .dropdown-item {
+    text-align: left; /* Выравнивание текста по левому краю */
+    padding: 0.75rem 1.5rem;
+  }
+  .dropdown-item {
+    padding: 0.75rem 1.5rem;
+  }
+  .dropdown-item:hover {
+    padding-left: 2rem;
+  }
+  .nav-item {
+    width: 100%;
+  }
+
+  /* Активация меню */
+  .nav-menu.active {
+    display: flex;
+    animation: slideDown 0.3s ease;
+    max-height: calc(100vh - var(--header-height));
+    overflow-y: auto; /* Добавляем прокрутку */
+  }
+
+  .auth-buttons {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .login-button,
+  .register-button {
+    width: 100%;
+    text-align: center;
+  }
+
+  .header-container {
+    flex-wrap: wrap;
+    padding: 0.5rem;
+  }
+
+  .nav-menu {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .nav-menu.active {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .nav-item {
+    width: 100%;
+  }
+
+  /* Исправление для кнопки Add Listing */
+  .add-listing {
+    width: calc(100% - 2rem); /* Полная ширина минус отступы */
+    margin: 0.5rem 1rem;
+    text-align: center;
+    display: block;
+  }
+
+  /* Исправление для кнопок авторизации */
+  .auth-buttons {
+    width: 100%;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .login-button,
+  .register-button {
+    width: 100%;
+    text-align: center;
+    margin: 0;
+  }
+
+  /* Исправление для поисковой строки */
+  .search-bar {
+    order: 3;
+    width: 100%;
+    margin: 0.5rem 0;
+  }
+
+  .search-bar form {
+    width: 100%;
+  }
+
+  /* Исправление для выпадающего меню */
+  .dropdown-content {
+    position: static;
+    width: 100%;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    box-shadow: none;
+    margin-top: 0.5rem;
+  }
+
+  .dropdown-item {
+    width: 100%;
+    text-align: left;
+  }
+}
+
+/* Добавьте медиа-запрос для очень маленьких экранов */
+@media (max-width: 480px) {
+  .header-container {
+    padding: 0.25rem;
+  }
+
+  .logo {
+    font-size: 1.25rem;
+  }
+
+  .nav-link {
+    padding: 0.5rem;
+  }
+}
+
+/* Анимации */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Дополнительные эффекты при скролле */
+.header.scrolled {
+  background-color: rgba(44, 62, 80, 0.98);
+  padding: 0.75rem 0;
+}
+
+/* Активное состояние ссылок */
+.nav-link.active {
+  color: var(--accent-color);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-link.active::after {
+  width: 70%;
+}
+
+/* Кнопка добавления объявления */
+.add-listing {
+  background: var(--accent-color);
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.add-listing:hover {
+  background: var(--accent-color-dark);
+  transform: translateY(-1px);
+}
+
+/* Стили для уведомлений */
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: var(--accent-color);
+  color: white;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+}
+
+/* Стили для кнопок авторизации */
+.auth-buttons {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.login-button,
+.register-button {
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.login-button {
+  color: var(--light-text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.register-button {
+  background: var(--accent-color);
+  color: white;
+}
+
+.login-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.register-button:hover {
+  background: var(--accent-color-dark);
+  transform: translateY(-1px);
+}
+
+.nav-menu.active .dropdown-content {
+  display: flex;
+  flex-direction: column;
+  opacity: 1;
+  visibility: visible;
+}
+
+.logout-button {
+  background: none;
+  border: none;
+  width: 100%; /* Растягиваем кнопку на всю ширину */
+  text-align: left; /* Выравниваем текст по левому краю */
+  font-size: inherit; /* Наследуем размер шрифта */
+  cursor: pointer; /* Делаем курсор в виде руки */
+}
+.dropdown-item.logout-button {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-size: inherit;
+  cursor: pointer;
+  color: var(--text-primary);
+  padding: 0.75rem 1rem;
+  border-radius: 6px; /* Добавляем закругление как у обычных пунктов */
+}
+
+.dropdown-item.logout-button:hover {
+  background: var(--accent-color);
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Улучшить стили для поисковой строки */
+.search-bar form {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* Исправить z-index для выпадающего меню */
+.dropdown-content {
+  z-index: 1000; /* Увеличиваем z-index */
+}
+
+.unread-badge {
+  background-color: #ff4444;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+  margin-left: 8px;
+}
+
+/* Добавьте эти стили к существующим */
+.dropdown.active .dropdown-content {
+  display: block;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .dropdown-content.show {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .nav-item.dropdown {
+    width: 100%;
+  }
+
+  .dropdown .nav-link {
+    width: 100%;
+    text-align: left;
+  }
+}

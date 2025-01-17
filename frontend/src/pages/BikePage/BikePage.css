@@ -1,0 +1,328 @@
+.bike-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.bike-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Секция с фотографиями */
+.bike-image-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 2rem auto 4rem;
+  padding: 0 2rem;
+}
+
+.main-image {
+  width: 100%;
+  max-width: 800px;
+  height: 350px;
+  object-fit: cover;
+  border-radius: 16px;
+  margin: 0 auto;
+  display: block;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.main-image:hover {
+  transform: scale(1.02);
+}
+
+.thumbnails-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.thumbnail {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.thumbnail:hover {
+  transform: scale(1.05);
+}
+
+.thumbnail.active {
+  border: 2px solid var(--primary-color);
+}
+
+/* Контент под фотографиями */
+.bike-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* Стили для заголовка и информации о цене */
+.bike-header {
+  text-align: center;
+  margin: 2rem auto 3rem;
+  max-width: 800px;
+}
+
+.bike-title {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  color: #2d3748;
+}
+
+.bike-model {
+  font-size: 1.5rem;
+  color: #4a5568;
+  margin-bottom: 1.5rem;
+}
+
+.bike-price {
+  font-size: 2rem;
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+/* Общие стили для информационных блоков */
+.info-block {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  width: 100%;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Применяем стили info-block к секциям */
+.bike-info-section,
+.bike-location,
+.bike-description,
+.bike-features {
+  composes: info-block;
+}
+
+/* Заголовки секций */
+.bike-info-section h2,
+.bike-location h2,
+.bike-description h2,
+.bike-features h2 {
+  text-align: center;
+  font-size: 1.5rem;
+  color: #2d3748;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #edf2f7;
+}
+
+/* Контент в Description и Features */
+.bike-description p,
+.bike-features p {
+  line-height: 1.6;
+  color: #4a5568;
+  text-align: left;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .main-image {
+    height: 280px;
+  }
+
+  .bike-title {
+    font-size: 2rem;
+  }
+
+  .bike-model {
+    font-size: 1.25rem;
+  }
+
+  .bike-price {
+    font-size: 1.75rem;
+  }
+
+  .info-block {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* Стили для модального окна */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  cursor: pointer;
+}
+
+.modal-image {
+  max-width: 90%;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+/* Стили для блока спецификаций */
+.specs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  padding: 1rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.spec-item {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column; /* Меняем на колонку */
+  align-items: center;
+  gap: 0.5rem;
+  transition: transform 0.2s;
+}
+
+.spec-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.spec-label {
+  color: #718096;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.spec-value {
+  color: #2d3748;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* Стили для блока местоположения */
+.bike-location {
+  text-align: center;
+}
+
+.location-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bike-location .specs-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* Одна колонка для адреса */
+  gap: 1.5rem;
+  padding: 1rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.bike-location .spec-item {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  transition: transform 0.2s;
+}
+
+.bike-location .spec-value {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bike-location svg {
+  color: var(--primary-color);
+  font-size: 1.2rem;
+}
+
+/* Стили для кнопок действий */
+.bike-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.contact-seller-button {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.contact-seller-button:hover {
+  background: #2ecc71;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
+}
+
+.contact-seller-button:active {
+  transform: translateY(0);
+  background: #27ae60;
+  box-shadow: 0 2px 4px rgba(46, 204, 113, 0.1);
+}
+
+.contact-seller-button svg {
+  font-size: 1.2rem;
+}
+
+/* Стили для блока с приглашением авторизоваться */
+.auth-prompt {
+  text-align: center;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  margin: 2rem auto;
+  max-width: 400px;
+}
+
+.auth-prompt p {
+  color: #4a5568;
+  margin: 0;
+}
+
+.auth-prompt a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.auth-prompt a:hover {
+  text-decoration: underline;
+}

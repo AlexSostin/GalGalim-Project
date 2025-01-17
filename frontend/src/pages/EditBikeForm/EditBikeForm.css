@@ -1,0 +1,280 @@
+.edit-bike-form-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .edit-bike-form-container h2 {
+    color: #333;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    text-align: center;
+  }
+  
+  .edit-bike-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .form-section {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+  }
+  
+  .form-section h3 {
+    color: #495057;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    border-bottom: 2px solid #dee2e6;
+    padding-bottom: 0.5rem;
+  }
+  
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .form-group label {
+    font-weight: 500;
+    color: #495057;
+    font-size: 0.9rem;
+  }
+  
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+  }
+  
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: #0066cc;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.25);
+  }
+  
+  .form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+  
+  .image-preview-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .image-preview {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #dee2e6;
+  }
+  
+  .image-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .file-input {
+    padding: 1rem;
+    border: 2px dashed #ced4da;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+  }
+  
+  .file-input:hover {
+    border-color: #0066cc;
+  }
+  
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+  }
+  
+  .form-actions button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .form-actions button[type="submit"] {
+    background-color: #0066cc;
+    color: white;
+    border: none;
+  }
+  
+  .form-actions button[type="submit"]:hover {
+    background-color: #0052a3;
+  }
+  
+  .form-actions button[type="submit"]:disabled {
+    background-color: #99c2ff;
+    cursor: not-allowed;
+  }
+  
+  .form-actions button[type="button"] {
+    background-color: #ffffff;
+    color: #495057;
+    border: 1px solid #ced4da;
+  }
+  
+  .form-actions button[type="button"]:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .error-message {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+  }
+  
+  .invalid-feedback {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }
+  
+  .form-control.is-invalid {
+    border-color: #dc3545;
+  }
+  
+  .form-control.is-invalid:focus {
+    box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.25);
+  }
+  
+  /* Стили для Select компонента */
+  .select-container {
+    width: 100%;
+  }
+  
+  .select__control {
+    border: 1px solid #ced4da !important;
+    min-height: 42px !important;
+  }
+  
+  .select__control--is-focused {
+    border-color: #0066cc !important;
+    box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.25) !important;
+  }
+  
+  .select__menu {
+    z-index: 2 !important;
+  }
+  
+  /* Адаптивность */
+  @media (max-width: 768px) {
+    .edit-bike-form-container {
+      margin: 1rem;
+      padding: 1rem;
+    }
+  
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .form-actions {
+      flex-direction: column;
+    }
+  
+    .form-actions button {
+      width: 100%;
+    }
+  }
+  
+  /* Анимации */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .edit-bike-form-container {
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  /* Дополнительные стили для улучшения UX */
+  .loading-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    color: #666;
+  }
+  
+  .success-message {
+    color: #28a745;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+  }
+  
+  .required-field::after {
+    content: '*';
+    color: #dc3545;
+    margin-left: 4px;
+  }
+  
+  /* Стили для подсказок */
+  .tooltip {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .tooltip .tooltip-text {
+    visibility: hidden;
+    width: 200px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+  }
