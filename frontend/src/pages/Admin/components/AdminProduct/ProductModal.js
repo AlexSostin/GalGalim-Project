@@ -6,6 +6,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
     product || {
       name: "",
       brand: "",
+      model: "",
       bike_type: "mountain",
       price: "",
       description: "",
@@ -72,6 +73,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
       setFormData({
         name: "",
         brand: "",
+        model: "",
         bike_type: "mountain",
         price: "",
         description: "",
@@ -119,6 +121,16 @@ const ProductModal = ({ product, onClose, onSave }) => {
               type="text"
               name="brand"
               value={formData.brand}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Model</label>
+            <input
+              type="text"
+              name="model"
+              value={formData.model}
               onChange={handleChange}
             />
           </div>

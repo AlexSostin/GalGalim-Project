@@ -246,9 +246,13 @@ const AdminProducts = () => {
             </div>
             <div className="product-info">
               <h3>{product.name}</h3>
-              <p className="category">{product.category}</p>
+              <p className="category">{product.bike_type}</p>
               <p className="price">${product.price}</p>
-              <p>Owner: {product.user?.username || "Unknown"}</p>
+              <p>Brand: {product.brand || "N/A"}</p>
+              <p>Model: {product.model || "N/A"}</p>
+              <p>
+                Owner: {product.owner?.username || product.owner || "Unknown"}
+              </p>
               <p
                 className={`status ${
                   product.status === "active" ? "active" : ""

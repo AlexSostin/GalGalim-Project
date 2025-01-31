@@ -31,13 +31,13 @@ body {
 
 .home-page {
   width: 100%;
-  min-height: 100vh;
+  overflow-x: hidden; /* Предотвращаем горизонтальный скролл */
 }
 
 /* Hero Section */
 .hero-section {
   position: relative;
-  width: 100vw;
+  width: 100%;
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -156,73 +156,64 @@ body {
   width: 100%;
   background: var(--background-color);
   padding: 4rem 0;
+  min-height: 1000px; /* Фиксированная высота для 9 карточек */
 }
 
-.section-header {
-  width: 100%;
-  padding: 0 2rem;
-  margin-bottom: 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.section-header h2 {
-  font-size: 2.5rem;
-  color: var(--color-text);
-  margin: 0;
-}
-
-/* Benefits Section */
-.benefits-section {
-  background: white;
-  margin-bottom: 4rem;
-}
-
-.benefits-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  width: 100%;
-  max-width: 1400px;
+.section-content {
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
 }
 
-.benefit-card {
-  padding: 2rem;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+/* Сетка для карточек */
+.section-content .bike-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 колонки */
+  gap: 30px;
+  margin-bottom: 2rem;
+}
+
+/* Пагинация */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding: 1rem 0;
+}
+
+.load-more {
+  background: var(--primary-color);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
   transition: all 0.3s ease;
 }
 
-.benefit-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+.load-more:hover {
+  background: var(--accent-color);
 }
 
-.benefit-icon {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-  color: var(--primary-color);
+/* Медиа-запросы */
+@media (max-width: 1200px) {
+  .section-content .bike-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 колонки */
+  }
 }
 
-/* Media Queries */
 @media (max-width: 768px) {
-  .section-header {
-    flex-direction: column;
-    text-align: center;
-    gap: 1rem;
-    padding: 0 1rem;
+  .section-content .bike-grid {
+    grid-template-columns: 1fr; /* 1 колонка */
   }
 
-  .section-header h2 {
-    font-size: 2rem;
-  }
-
-  .benefits-grid {
-    padding: 2rem 1rem;
+  .featured-section {
+    min-height: auto;
+    padding: 2rem 0;
   }
 }
 
@@ -230,5 +221,90 @@ body {
 @supports (-webkit-touch-callout: none) {
   .hero-section {
     min-height: -webkit-fill-available;
+  }
+}
+
+.benefits-section {
+  padding: 60px 20px;
+  background-color: #f8f9fa;
+}
+
+.benefits-section h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+  color: #2d3748;
+  font-weight: 600;
+  position: relative;
+  padding-bottom: 15px;
+}
+
+.benefits-section h2::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background-color: var(--primary-color);
+  border-radius: 2px;
+}
+
+.container-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.benefits-grid {
+  display: flex;
+  gap: 30px;
+  margin-top: 30px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.benefit-card {
+  flex: 1;
+  min-width: 300px;
+  max-width: 400px;
+  padding: 30px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.benefit-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.benefit-icon {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.benefit-card h3 {
+  font-size: 1.5rem;
+  color: #2d3748;
+  margin-bottom: 15px;
+}
+
+.benefit-card p {
+  color: #718096;
+  line-height: 1.6;
+}
+
+@media (max-width: 1024px) {
+  .benefits-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .benefit-card {
+    width: 100%;
+    max-width: 500px;
   }
 }

@@ -43,13 +43,14 @@ const BikesPage = () => {
     frame_size: "",
     wheel_size: "",
   });
+  const [isApplyingFilters, setIsApplyingFilters] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
 
     const fetchData = async () => {
       try {
-        await fetchBikes();
+        await fetchBikes(appliedFilters);
       } catch (error) {
         if (isMounted) {
           setError(error.message);
@@ -88,14 +89,14 @@ const BikesPage = () => {
 
   useEffect(() => {
     const params = new URLSearchParams();
+    if (appliedFilters.bike_type)
+      params.append("bike_type", appliedFilters.bike_type);
     if (appliedFilters.condition)
       params.append("condition", appliedFilters.condition);
     if (appliedFilters.priceMin)
       params.append("min_price", appliedFilters.priceMin);
     if (appliedFilters.priceMax)
       params.append("max_price", appliedFilters.priceMax);
-    if (appliedFilters.bike_type)
-      params.append("bike_type", appliedFilters.bike_type);
     if (appliedFilters.frame_size)
       params.append("frame_size", appliedFilters.frame_size);
     if (appliedFilters.wheel_size)
@@ -113,32 +114,35 @@ const BikesPage = () => {
     setSearchQuery(searchParams.get("search") || "");
   }, [searchParams]);
 
-  const fetchBikes = async () => {
+  const fetchBikes = async (filters = {}) => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
-      if (appliedFilters.condition)
-        params.append("condition", appliedFilters.condition);
-      if (appliedFilters.priceMin)
-        params.append("min_price", appliedFilters.priceMin);
-      if (appliedFilters.priceMax)
-        params.append("max_price", appliedFilters.priceMax);
-      if (appliedFilters.bike_type)
-        params.append("bike_type", appliedFilters.bike_type);
-      if (searchQuery) params.append("search", searchQuery);
-      if (appliedFilters.frame_size)
-        params.append("frame_size", appliedFilters.frame_size);
-      if (appliedFilters.wheel_size)
-        params.append("wheel_size", appliedFilters.wheel_size);
 
-      console.log("Fetching bikes with params:", params.toString());
+      const activeFilters = filters || appliedFilters;
+
+      if (activeFilters.bike_type)
+        params.append("bike_type", activeFilters.bike_type);
+      if (activeFilters.condition)
+        params.append("condition", activeFilters.condition);
+      if (activeFilters.priceMin)
+        params.append("min_price", activeFilters.priceMin);
+      if (activeFilters.priceMax)
+        params.append("max_price", activeFilters.priceMax);
+      if (activeFilters.frame_size)
+        params.append("frame_size", activeFilters.frame_size);
+      if (activeFilters.wheel_size)
+        params.append("wheel_size", activeFilters.wheel_size);
+      if (searchQuery) params.append("search", searchQuery);
+
+      console.log("Request URL:", `http://127.0.0.1:8000/api/bikes/?${params}`);
 
       const response = await fetch(
         `http://127.0.0.1:8000/api/bikes/?${params}`,
         {
           headers: {
             Accept: "application/json",
-            Authorization: token ? `Bearer ${token}` : "",
+            ...(token && { Authorization: `Bearer ${token}` }),
           },
         }
       );
@@ -213,8 +217,16 @@ const BikesPage = () => {
     }));
   };
 
-  const applyFilters = () => {
-    setAppliedFilters(displayFilters);
+  const applyFilters = async () => {
+    try {
+      setIsApplyingFilters(true);
+      await fetchBikes(displayFilters);
+      setAppliedFilters({ ...displayFilters });
+    } catch (error) {
+      console.error("Error applying filters:", error);
+    } finally {
+      setIsApplyingFilters(false);
+    }
   };
 
   console.log("Display Filters:", displayFilters);
@@ -314,8 +326,14 @@ const BikesPage = () => {
           </select>
         </div>
 
-        <button className="apply-filters-button" onClick={applyFilters}>
-          Apply Filters
+        <button
+          className={`apply-filters-button ${
+            isApplyingFilters ? "loading" : ""
+          }`}
+          onClick={applyFilters}
+          disabled={isApplyingFilters}
+        >
+          {isApplyingFilters ? "" : "Apply Filters"}
         </button>
       </div>
 

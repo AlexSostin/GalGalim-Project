@@ -20,14 +20,17 @@ const BikeList = () => {
   const { isAuthenticated, token } = useAuth();
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get("search");
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const itemsPerPage = 9; // Показываем 9 карточек на странице
 
   useEffect(() => {
     const fetchBikes = async () => {
       setLoading(true);
       try {
-        let url = "http://127.0.0.1:8000/api/bikes/";
+        let url = `http://127.0.0.1:8000/api/bikes/?page=${page}&limit=${itemsPerPage}`;
         if (searchQuery) {
-          url += `?search=${encodeURIComponent(searchQuery)}`;
+          url += `&search=${encodeURIComponent(searchQuery)}`;
         }
 
         const response = await fetch(url);
@@ -35,18 +38,30 @@ const BikeList = () => {
           throw new Error("Failed to fetch bikes");
         }
         const data = await response.json();
-        setBikes(data);
+
+        if (data.results) {
+          setBikes((prevBikes) =>
+            page === 1 ? data.results : [...prevBikes, ...data.results]
+          );
+          setHasMore(data.next !== null);
+        } else {
+          setBikes((prevBikes) =>
+            page === 1 ? data : [...prevBikes, ...data]
+          );
+          setHasMore(data.length === itemsPerPage);
+        }
         setError(null);
       } catch (error) {
         console.error("Error fetching bikes:", error);
         setError("Failed to load bikes");
+        setBikes([]);
       } finally {
         setLoading(false);
       }
     };
 
     fetchBikes();
-  }, [searchQuery]); // Перезагружаем при изменении поискового запроса
+  }, [searchQuery, page, itemsPerPage]);
 
   useEffect(() => {
     const fetchSavedBikes = async () => {
@@ -160,121 +175,143 @@ const BikeList = () => {
     return `${wheelSize}"`;
   };
 
+  const handleLoadMore = () => {
+    setPage((prevPage) => prevPage + 1);
+  };
+
   return (
     <div className="bike-list-container">
       {searchQuery && (
         <h2 className="search-results">Search results for: "{searchQuery}"</h2>
       )}
 
-      {loading ? (
+      {loading && page === 1 ? (
         <div className="loading-spinner">Loading...</div>
       ) : error ? (
         <div className="error-message">Error: {error}</div>
-      ) : bikes.length === 0 ? (
+      ) : bikes?.length === 0 ? (
         <p className="no-bikes-message">
           {searchQuery
             ? `No bikes found for "${searchQuery}"`
             : "No bikes available"}
         </p>
       ) : (
-        <div className="bike-grid">
-          {bikes.map((bike) => (
-            <div key={bike.id} className="bike-card-wrapper">
-              <Link to={`/bikes/${bike.id}`} className="bike-card">
-                <div className="bike-image-container">
-                  {bike.image ? (
-                    <img
-                      src={
-                        bike.image.startsWith("http")
-                          ? bike.image
-                          : `http://127.0.0.1:8000${bike.image}`
-                      }
-                      alt={bike.name}
-                      className="bike-image"
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = "/default-bike.png";
-                      }}
-                    />
-                  ) : (
-                    <div className="no-image">No image available</div>
-                  )}
-                </div>
-                <div className="bike-info">
-                  <h3 className="bike-name">{bike.name}</h3>
-                  <p className="bike-price">${bike.price}</p>
-
-                  <div className="bike-specs">
-                    {bike.brand && (
-                      <p className="bike-spec">
-                        <span className="spec-label">Brand</span>
-                        <span className="spec-value">
-                          {bike.brand.charAt(0).toUpperCase() +
-                            bike.brand.slice(1)}
-                        </span>
-                      </p>
-                    )}
-                    {bike.model && (
-                      <p className="bike-spec">
-                        <span className="spec-label">Model</span>
-                        <span className="spec-value">
-                          {bike.model.charAt(0).toUpperCase() +
-                            bike.model.slice(1)}
-                        </span>
-                      </p>
-                    )}
-                    {bike.year && (
-                      <p className="bike-spec">
-                        <span className="spec-label">Year</span>
-                        <span className="spec-value">{bike.year}</span>
-                      </p>
-                    )}
-                    {bike.frame_size && (
-                      <p className="bike-spec">
-                        <span className="spec-label">Frame Size</span>
-                        <span className="spec-value">
-                          {getFrameSizeLabel(bike.frame_size)}
-                        </span>
-                      </p>
-                    )}
-                    {bike.wheel_size && (
-                      <p className="bike-spec">
-                        <span className="spec-label">Wheel Size</span>
-                        <span className="spec-value">
-                          {getWheelSizeLabel(bike.wheel_size)}
-                        </span>
-                      </p>
-                    )}
-                    {bike.bike_type && (
-                      <p className="bike-spec">
-                        <span className="spec-label">Type</span>
-                        <span className="spec-value">
-                          {getBikeTypeLabel(bike.bike_type)}
-                        </span>
-                      </p>
-                    )}
-                    {bike.condition && (
-                      <p className="bike-spec">
-                        <span className="spec-label">Condition</span>
-                        <span className="spec-value">
-                          {getConditionLabel(bike.condition)}
-                        </span>
-                      </p>
+        <>
+          <div className="bike-grid">
+            {bikes?.map((bike) => (
+              <div key={bike.id} className="bike-card-wrapper">
+                <Link to={`/bikes/${bike.id}`} className="bike-card">
+                  <div className="bike-image-container">
+                    {bike.image ? (
+                      <img
+                        src={
+                          bike.image.startsWith("http")
+                            ? bike.image
+                            : `http://127.0.0.1:8000${bike.image}`
+                        }
+                        alt={bike.name}
+                        className="bike-image"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = "/default-bike.png";
+                        }}
+                      />
+                    ) : (
+                      <div className="no-image">No image available</div>
                     )}
                   </div>
-                </div>
-              </Link>
-              {isAuthenticated && (
-                <button
-                  className="save-button"
-                  onClick={(e) => handleSave(bike.id, e)}
-                >
-                  {savedBikes.includes(bike.id) ? <FaHeart /> : <FaRegHeart />}
-                </button>
-              )}
+                  <div className="bike-info">
+                    <h3 className="bike-name">{bike.name}</h3>
+                    <p className="bike-price">${bike.price}</p>
+
+                    <div className="bike-specs">
+                      {bike.brand && (
+                        <p className="bike-spec">
+                          <span className="spec-label">Brand</span>
+                          <span className="spec-value">
+                            {bike.brand.charAt(0).toUpperCase() +
+                              bike.brand.slice(1)}
+                          </span>
+                        </p>
+                      )}
+                      {bike.model && (
+                        <p className="bike-spec">
+                          <span className="spec-label">Model</span>
+                          <span className="spec-value">
+                            {bike.model.charAt(0).toUpperCase() +
+                              bike.model.slice(1)}
+                          </span>
+                        </p>
+                      )}
+                      {bike.year && (
+                        <p className="bike-spec">
+                          <span className="spec-label">Year</span>
+                          <span className="spec-value">{bike.year}</span>
+                        </p>
+                      )}
+                      {bike.frame_size && (
+                        <p className="bike-spec">
+                          <span className="spec-label">Frame Size</span>
+                          <span className="spec-value">
+                            {getFrameSizeLabel(bike.frame_size)}
+                          </span>
+                        </p>
+                      )}
+                      {bike.wheel_size && (
+                        <p className="bike-spec">
+                          <span className="spec-label">Wheel Size</span>
+                          <span className="spec-value">
+                            {getWheelSizeLabel(bike.wheel_size)}
+                          </span>
+                        </p>
+                      )}
+                      {bike.bike_type && (
+                        <p className="bike-spec">
+                          <span className="spec-label">Type</span>
+                          <span className="spec-value">
+                            {getBikeTypeLabel(bike.bike_type)}
+                          </span>
+                        </p>
+                      )}
+                      {bike.condition && (
+                        <p className="bike-spec">
+                          <span className="spec-label">Condition</span>
+                          <span className="spec-value">
+                            {getConditionLabel(bike.condition)}
+                          </span>
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </Link>
+                {isAuthenticated && (
+                  <button
+                    className="save-button"
+                    onClick={(e) => handleSave(bike.id, e)}
+                  >
+                    {savedBikes.includes(bike.id) ? (
+                      <FaHeart />
+                    ) : (
+                      <FaRegHeart />
+                    )}
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {hasMore && (
+            <div className="pagination">
+              <button
+                className="load-more"
+                onClick={handleLoadMore}
+                disabled={loading}
+              >
+                {loading ? "Loading..." : "Load More"}
+              </button>
             </div>
-          ))}
-        </div>
+          )}
+        </>
       )}
     </div>
   );

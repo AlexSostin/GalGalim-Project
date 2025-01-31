@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import { useAuth } from "../../../../context/AuthContext";
 import AdminOverview from "../AdminOverview/AdminOverview";
-import AdminOrders from "../AdminOrders/AdminOrders";
 import AdminProducts from "../AdminProduct/AdminProducts";
 import AdminUsers from "../AdminUsers/AdminUsers";
 import AdminSettings from "../AdminSettings/AdminSettings";
 import "./AdminDashboard.css";
 
 const AdminDashboard = () => {
-  const { isAdmin } = useAuth();
+  const { isAdmin, user, loading } = useAuth();
   const [activeTab, setActiveTab] = useState("overview");
+
+  if (loading) {
+    return <div className="loading">Loading...</div>;
+  }
 
   if (!isAdmin) {
     return (
@@ -24,8 +27,6 @@ const AdminDashboard = () => {
     switch (activeTab) {
       case "overview":
         return <AdminOverview />;
-      case "orders":
-        return <AdminOrders />;
       case "products":
         return <AdminProducts />;
       case "users":
@@ -49,14 +50,6 @@ const AdminDashboard = () => {
             onClick={() => setActiveTab("overview")}
           >
             Overview
-          </button>
-          <button
-            className={`admin-nav-btn ${
-              activeTab === "orders" ? "active" : ""
-            }`}
-            onClick={() => setActiveTab("orders")}
-          >
-            Orders
           </button>
           <button
             className={`admin-nav-btn ${

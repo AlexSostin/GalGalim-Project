@@ -11,7 +11,8 @@ class Bike(models.Model):
         null=True,
         blank=True
     )
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=255, blank=True)
     brand = models.CharField(max_length=100, null=True, blank=True)
     bike_type = models.CharField(max_length=50, choices=[
         ('mountain', 'Mountain Bike'),
@@ -118,6 +119,11 @@ class Bike(models.Model):
 
     def get_full_info(self):
         return f"{self.name} - {self.description} - {self.price} $"
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
     class Meta:
         indexes = [
@@ -273,13 +279,22 @@ class Message(models.Model):
         return f"Message from {self.sender.username} in chat {self.chat.id}"
 
 class BikeImage(models.Model):
-    bike = models.ForeignKey(Bike, related_name='images', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='bikes/')
+    bike = models.ForeignKey(
+        Bike, 
+        related_name='additional_images',
+        on_delete=models.CASCADE
+    )
+    image = models.ImageField(
+        upload_to='bikes/',
+        verbose_name='Additional Image'
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ['created_at']
+        verbose_name = 'Bike Image'
+        verbose_name_plural = 'Bike Images'
 
     def __str__(self):
-        return f"Image for {self.bike.name} ({self.id})"
+        return f"Additional image {self.id} for {self.bike.name}"
 

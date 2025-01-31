@@ -58,16 +58,48 @@ class BikeSerializer(serializers.ModelSerializer):
 
     def get_image_urls(self, obj):
         request = self.context.get('request')
-        if obj.images.exists():  # Предполагая, что у нас есть related_name='images' в модели BikeImage
-            return [request.build_absolute_uri(image.image.url) for image in obj.images.all()]
-        return []
+        if not request:
+            return []
+        
+        urls = []
+        
+        # Добавляем основное изображение
+        if obj.image:
+            main_image_url = request.build_absolute_uri(obj.image.url)
+            urls.append(main_image_url)
+            print(f"Added main image: {main_image_url}")
+        
+        # Получаем связанные изображения через правильный related_name
+        bike_images = obj.additional_images.all()  # Используем additional_images вместо images
+        print(f"Found {bike_images.count()} additional images for bike {obj.id}")
+        
+        # Добавляем дополнительные изображения
+        for bike_image in bike_images:
+            if bike_image.image:
+                additional_url = request.build_absolute_uri(bike_image.image.url)
+                urls.append(additional_url)
+                print(f"Added additional image: {additional_url}")
+        
+        return urls
 
     def create(self, validated_data):
         images_data = validated_data.pop('images', [])
+        print(f"Processing {len(images_data)} images")
+        
+        # Создаем велосипед
         bike = Bike.objects.create(**validated_data)
         
-        for image_data in images_data:
-            BikeImage.objects.create(bike=bike, image=image_data)
+        # Если есть изображения
+        if images_data:
+            # Первое изображение делаем основным
+            bike.image = images_data[0]
+            bike.save()
+            print(f"Set main image for bike {bike.id}")
+            
+            # Остальные сохраняем как дополнительные
+            for image_data in images_data[1:]:
+                bike_image = BikeImage.objects.create(bike=bike, image=image_data)
+                print(f"Created additional image {bike_image.id} for bike {bike.id}")
         
         return bike
 
@@ -138,33 +170,24 @@ class UserSerializer(serializers.ModelSerializer):
         return obj.date_joined.strftime('%Y-%m-%d')
 
 class BikeListSerializer(serializers.ModelSerializer):
+    bike_type = serializers.CharField(source='get_bike_type_display')
+    condition = serializers.CharField(source='get_condition_display')
     image = serializers.SerializerMethodField()
     seller = serializers.SerializerMethodField()
-    bike_type_display = serializers.SerializerMethodField()
 
     def get_seller(self, obj):
-        if obj.user:
-            return {
-                'id': obj.user.id,
-                'username': obj.user.username
-            }
-        return None
+        return obj.user.username if obj.user else None
 
     def get_image(self, obj):
         if obj.image:
-            request = self.context.get('request')
-            if request:
-                return request.build_absolute_uri(obj.image.url)
+            return self.context['request'].build_absolute_uri(obj.image.url)
         return None
-
-    def get_bike_type_display(self, obj):
-        return obj.get_bike_type_display()
 
     class Meta:
         model = Bike
         fields = [
-            'id', 'name', 'price', 'bike_type', 'bike_type_display',
-            'state', 'image', 'seller', 'city'
+            'id', 'name', 'price', 'bike_type', 'condition',
+            'image', 'seller', 'city', 'frame_size', 'wheel_size'
         ]
 
 class ChatSerializer(serializers.ModelSerializer):
@@ -258,3 +281,34 @@ class ChatDetailSerializer(serializers.ModelSerializer):
         return obj.messages.filter(
             sender__in=[obj.buyer, obj.seller]
         ).exclude(sender=request_user).filter(is_read=False).count()
+
+class BikeAdminSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+    image_url = serializers.SerializerMethodField()
+
+    def get_user(self, obj):
+        return {
+            "id": obj.user.id,
+            "username": obj.user.username
+        }
+
+    def get_image_url(self, obj):
+        if obj.image:
+            return self.context['request'].build_absolute_uri(obj.image.url)
+        return None
+
+    class Meta:
+        model = Bike
+        fields = ['id', 'name', 'price', 'user', 'created_at', 'is_available', 'image_url']
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'email']
+        read_only_fields = ['email']  # Email нельзя изменить
+        
+    def validate_username(self, value):
+        user = self.context['request'].user
+        if User.objects.exclude(pk=user.pk).filter(username=value).exists():
+            raise serializers.ValidationError("This username is already taken.")
+        return value

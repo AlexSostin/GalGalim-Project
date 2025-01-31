@@ -11,9 +11,8 @@ import Login from "./components/Login";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import AddBikeForm from "./pages/AddBikeForm/AddBikeForm";
 import AccessDenied from "./pages/Auth/AccessDenied";
-import ProfilePage from "./pages/Profile/ProfilePage";
+import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import AdminDashboard from "./pages/Admin/components/AdminDashboard/AdminDashboard";
-import AdminOrders from "./pages/Admin/components/AdminOrders/AdminOrders";
 import { AdminRoute, UserRoute } from "./components/routes/ProtectedRoute";
 import MyListings from "./components/Listings/MyListings";
 import Messages from "./components/Messages/Messages";
@@ -76,7 +75,6 @@ function AppContent() {
                 </AdminRoute>
               }
             />
-            <Route path="/profile/orders" element={<AdminOrders />} />
           </Routes>
         </main>
         <Footer />

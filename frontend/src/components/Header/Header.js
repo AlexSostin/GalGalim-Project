@@ -1,44 +1,18 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import "./Header.css";
 import { AuthContext } from "../../context/AuthContext";
+import ReactDOM from "react-dom";
+import PropTypes from "prop-types";
 
-const Header = ({ logout: logoutProp }) => {
+const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [modalContent, setModalContent] = useState(null);
-  const { isAuthenticated, logout, isAdmin, token } = useAuth();
+  const { isAuthenticated, logout, isAdmin } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
-  const [unreadMessages, setUnreadMessages] = useState(0);
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { logout: logoutContext } = useContext(AuthContext);
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      const fetchUnreadCount = async () => {
-        try {
-          const response = await fetch(
-            "http://localhost:8000/api/messages/unread-count/",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          const data = await response.json();
-          setUnreadMessages(data.count);
-        } catch (error) {
-          console.error("Error fetching unread messages:", error);
-        }
-      };
-
-      fetchUnreadCount();
-      const interval = setInterval(fetchUnreadCount, 30000); // Проверяем каждые 30 секунд
-
-      return () => clearInterval(interval);
-    }
-  }, [isAuthenticated]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -80,7 +54,7 @@ const Header = ({ logout: logoutProp }) => {
       label: "Logout",
       path: "/logout",
       onClick: () => {
-        logoutContext();
+        logout();
         closeMenu();
       },
     },
@@ -105,32 +79,49 @@ const Header = ({ logout: logoutProp }) => {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    if (!searchQuery.trim()) return;
+    const query = searchQuery.trim();
+    if (!query) return;
 
     try {
-      navigate(`/bikes?search=${encodeURIComponent(searchQuery.trim())}`);
-
+      navigate(`/bikes?search=${encodeURIComponent(query)}`);
       setSearchQuery("");
-
-      if (isMenuOpen) {
-        closeMenu();
-      }
+      if (isMenuOpen) closeMenu();
     } catch (error) {
       console.error("Error searching bikes:", error);
+      // Добавить уведомление пользователю об ошибке
     }
   };
 
   const handleLogout = () => {
-    logoutContext();
+    logout();
     navigate("/");
   };
+
+  const renderAuthButtons = () => (
+    <div className="nav-item auth-buttons">
+      <Link
+        to="/login"
+        className="nav-link login-button"
+        onClick={handleMenuItemClick}
+      >
+        Login
+      </Link>
+      <Link
+        to="/register"
+        className="nav-link register-button"
+        onClick={handleMenuItemClick}
+      >
+        Register
+      </Link>
+    </div>
+  );
 
   return (
     <>
       <header className={`header ${isMenuOpen ? "menu-open" : ""}`}>
         <div className="header-container">
           <Link to="/" className="logo" onClick={closeMenu}>
-            BikeStore
+            GalGalim
           </Link>
 
           <div className="search-bar">
@@ -244,9 +235,6 @@ const Header = ({ logout: logoutProp }) => {
                       role="menuitem"
                     >
                       Messages
-                      {unreadMessages > 0 && (
-                        <span className="unread-badge">{unreadMessages}</span>
-                      )}
                     </Link>
                     <div className="dropdown-divider"></div>
                     <Link
@@ -271,22 +259,7 @@ const Header = ({ logout: logoutProp }) => {
                 </div>
               </>
             ) : (
-              <div className="nav-item auth-buttons">
-                <Link
-                  to="/login"
-                  className="nav-link login-button"
-                  onClick={handleMenuItemClick}
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/register"
-                  className="nav-link register-button"
-                  onClick={handleMenuItemClick}
-                >
-                  Register
-                </Link>
-              </div>
+              renderAuthButtons()
             )}
           </nav>
 
@@ -301,18 +274,26 @@ const Header = ({ logout: logoutProp }) => {
         </div>
       </header>
 
-      {modalContent && (
-        <div className="modal-overlay" onClick={closeModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close" onClick={closeModal}>
-              ✕
-            </button>
-            {modalContent}
-          </div>
-        </div>
-      )}
+      {modalContent &&
+        ReactDOM.createPortal(
+          <div className="modal-overlay" onClick={closeModal}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <button className="modal-close" onClick={closeModal}>
+                ✕
+              </button>
+              {modalContent}
+            </div>
+          </div>,
+          document.body
+        )}
     </>
   );
+};
+
+Header.propTypes = {
+  isAuthenticated: PropTypes.bool.isRequired,
+  isAdmin: PropTypes.bool,
+  logout: PropTypes.func.isRequired,
 };
 
 export default Header;

@@ -34,7 +34,7 @@ const Login = () => {
 
         const userData = {
           ...data.user,
-          role: data.user.is_superuser ? "ADMIN" : "USER",
+          role: data.user.is_superuser ? "admin" : "user",
         };
 
         login(userData, data.token);

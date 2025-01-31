@@ -15,13 +15,14 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.filters import SearchFilter
 from django.db.models import Q
 from .models import Product
-from .serializers import ProductSerializer, UserSerializer
+from .serializers import ProductSerializer, UserSerializer, UserProfileSerializer
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from datetime import timedelta
 from django.db.models import Count
 from django.contrib.auth.models import User
 from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.views import APIView
 
 User = get_user_model()
 
@@ -33,14 +34,34 @@ class BikeList(generics.ListAPIView):
     queryset = Bike.objects.all()
     serializer_class = BikeSerializer
     permission_classes = [AllowAny]
-    filter_backends = [SearchFilter]
-    search_fields = ['name', 'brand', 'model', 'description', 'city']
 
     def get_queryset(self):
-        queryset = Bike.objects.all()
-        search_query = self.request.query_params.get('search', None)
+        queryset = super().get_queryset()
+        
+        # Получаем параметры фильтрации
+        params = self.request.query_params
+        bike_type = params.get('bike_type')
+        condition = params.get('condition')
+        price_min = params.get('min_price')
+        price_max = params.get('max_price')
+        frame_size = params.get('frame_size')
+        wheel_size = params.get('wheel_size')
+        search_query = params.get('search')
+
+        # Применяем фильтры
+        if bike_type:
+            queryset = queryset.filter(bike_type__iexact=bike_type)
+        if condition:
+            queryset = queryset.filter(condition__iexact=condition)
+        if price_min:
+            queryset = queryset.filter(price__gte=price_min)
+        if price_max:
+            queryset = queryset.filter(price__lte=price_max)
+        if frame_size:
+            queryset = queryset.filter(frame_size__iexact=frame_size)
+        if wheel_size:
+            queryset = queryset.filter(wheel_size__iexact=wheel_size)
         if search_query:
-            print(f"Searching for: {search_query}")  # Отладочная информация
             queryset = queryset.filter(
                 Q(name__icontains=search_query) |
                 Q(brand__icontains=search_query) |
@@ -48,8 +69,8 @@ class BikeList(generics.ListAPIView):
                 Q(description__icontains=search_query) |
                 Q(city__icontains=search_query)
             )
-            print(f"Found {queryset.count()} results")  # Отладочная информация
-        return queryset
+
+        return queryset.order_by('-created_at')
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -230,11 +251,11 @@ def register(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-@parser_classes([MultiPartParser, FormParser])  # Добавляем парсеры для обработки файлов
+@parser_classes([MultiPartParser, FormParser])
 def create_bike(request):
     try:
-        print("Received data:", request.data)  # Для отладки
-        print("Received files:", request.FILES)  # Для отладки
+        print("Received files:", request.FILES)
+        print("Number of images:", len(request.FILES.getlist('images')))
         
         serializer = BikeSerializer(
             data=request.data,
@@ -243,16 +264,17 @@ def create_bike(request):
         
         if serializer.is_valid():
             bike = serializer.save(user=request.user)
+            print("Created bike images:", [img.image.url for img in bike.images.all()])
             return Response(
                 BikeSerializer(bike, context={'request': request}).data,
                 status=status.HTTP_201_CREATED
             )
         else:
-            print("Serializer errors:", serializer.errors)  # Для отладки
+            print("Serializer errors:", serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             
     except Exception as e:
-        print(f"Error creating bike: {str(e)}")  # Для отладки
+        print(f"Error creating bike: {str(e)}")
         return Response(
             {'error': str(e)},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -435,29 +457,46 @@ def verify_token(request):
 @api_view(['GET', 'PUT'])
 @permission_classes([IsAuthenticated])
 def user_profile(request):
-    if request.method == 'GET':
+    try:
         user = request.user
-        listings_count = Bike.objects.filter(user=user).count()
-        sold_count = Bike.objects.filter(user=user, status='sold').count()
         
-        profile_data = {
-            'username': user.username,
-            'email': user.email,
-            'role': 'Administrator' if user.is_staff else 'User',
-            'listings_count': listings_count,
-            'sold_count': sold_count,
-            # Добавьте другие поля профиля по необходимости
-        }
-        return Response(profile_data)
-    
-    elif request.method == 'PUT':
-        user = request.user
-        # Обновление данных профиля
-        serializer = UserProfileSerializer(user, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=400)
+        if request.method == 'GET':
+            listings_count = Bike.objects.filter(user=user).count()
+            sold_count = Bike.objects.filter(user=user, status='sold').count()
+            
+            profile_data = {
+                'username': user.username,
+                'email': user.email,
+                'role': 'Administrator' if user.is_staff else 'User',
+                'listings_count': listings_count,
+                'sold_count': sold_count,
+            }
+            return Response(profile_data)
+        
+        elif request.method == 'PUT':
+            serializer = UserProfileSerializer(
+                user, 
+                data=request.data,
+                context={'request': request},
+                partial=True
+            )
+            
+            if serializer.is_valid():
+                serializer.save()
+                return Response({
+                    'username': user.username,
+                    'email': user.email,
+                    'role': 'Administrator' if user.is_staff else 'User',
+                    'message': 'Profile updated successfully'
+                })
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+    except Exception as e:
+        print(f"Error in user_profile: {str(e)}")  # Для отладки
+        return Response(
+            {'error': str(e)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 class ProductSearchView(generics.ListAPIView):
     queryset = Product.objects.all()
@@ -1023,6 +1062,67 @@ def bike_list(request):
 
     except Exception as e:
         print(f"Error in bike_list: {str(e)}")
+        return Response(
+            {'error': str(e)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+class BikeAdminAPIView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def get(self, request):
+        try:
+            bikes = Bike.objects.all()
+            serializer = BikeAdminSerializer(bikes, many=True, context={'request': request})  # Добавляем контекст
+            return Response(serializer.data)
+        except Exception as e:
+            print(f"Server error: {str(e)}")  # Логируем ошибку
+            return Response({"error": "Internal server error"}, status=500)
+
+class BikeStatusAPIView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def put(self, request, pk):
+        bike = get_object_or_404(Bike, pk=pk)
+        bike.is_available = request.data.get('is_available', bike.is_available)
+        bike.save()
+        return Response(BikeAdminSerializer(bike).data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def check_saved_bike(request, bike_id):
+    """Проверяет, сохранен ли велосипед в избранное"""
+    try:
+        is_saved = SavedBike.objects.filter(
+            user=request.user,
+            bike_id=bike_id
+        ).exists()
+        return Response({'is_saved': is_saved})
+    except Exception as e:
+        return Response(
+            {'error': str(e)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+@api_view(['GET'])
+@permission_classes([AllowAny])  # Изменяем с IsAuthenticated на AllowAny
+def get_similar_bikes(request, bike_id):
+    """Получает список похожих велосипедов"""
+    try:
+        bike = Bike.objects.get(id=bike_id)
+        similar_bikes = Bike.objects.filter(
+            Q(bike_type=bike.bike_type) |
+            Q(brand=bike.brand)
+        ).exclude(id=bike_id)[:4]
+        
+        serializer = BikeSerializer(similar_bikes, many=True, context={'request': request})
+        return Response(serializer.data)
+    except Bike.DoesNotExist:
+        return Response(
+            {'error': 'Bike not found'},
+            status=status.HTTP_404_NOT_FOUND
+        )
+    except Exception as e:
         return Response(
             {'error': str(e)},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR

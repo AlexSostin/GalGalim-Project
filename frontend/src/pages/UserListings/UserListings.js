@@ -36,7 +36,7 @@ const UserListings = () => {
   };
 
   const handleEdit = (bikeId) => {
-    navigate(`/edit-bike/${bikeId}`);
+    navigate(`/bikes/${bikeId}/edit`);
   };
 
   const handleDelete = async (bikeId) => {
@@ -108,7 +108,7 @@ const UserListings = () => {
                 <div className="listing-actions">
                   <button
                     className="view-btn"
-                    onClick={() => navigate(`/view-bike/${listing.id}`)}
+                    onClick={() => navigate(`/bikes/${listing.id}`)}
                   >
                     View
                   </button>

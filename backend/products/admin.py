@@ -8,6 +8,8 @@ class BikeAdmin(admin.ModelAdmin):
     search_fields = ('name', 'description')
     ordering = ('-created_at',)
     list_per_page = 20
+    readonly_fields = ('created_at',)
+    prepopulated_fields = {'slug': ('name',)}
 
 @admin.register(Cart)
 class CartAdmin(admin.ModelAdmin):
@@ -19,8 +21,11 @@ class CartAdmin(admin.ModelAdmin):
         return obj.items.count()
     get_total_items.short_description = 'Total Items'
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('items')
+
 @admin.register(CartItem)
 class CartItemAdmin(admin.ModelAdmin):
     list_display = ('cart', 'bike', 'quantity')
-    list_filter = ('cart__user',)
+    list_filter = ('cart__user', 'bike')
     search_fields = ('cart__user__username', 'bike__name')

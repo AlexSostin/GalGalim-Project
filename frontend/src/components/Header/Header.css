@@ -5,28 +5,30 @@
   --primary-color: #007bff;
   --secondary-color: #6c757d;
   --light-text: #ffffff;
-  --accent-color: #28a745;
-  --accent-color-dark: #218838;
-  --text-primary: #343a40;
+  --accent-color: #3498db;
+  --accent-color-dark: #2980b9;
+  --text-primary: #333333;
   --spacing-md: 1rem;
+  --header-bg: rgba(44, 62, 80, 0.98);
+  --transition: all 0.3s ease;
 }
 
 /* Современный, профессиональный хедер */
 .header {
-  background-color: rgba(44, 62, 80, 0.98);
+  background-color: var(--header-bg);
   backdrop-filter: blur(10px);
   padding: 1rem 0;
   position: sticky;
   top: 0;
   z-index: 100;
   box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+  transition: var(--transition);
 }
 
 .header-container {
   max-width: var(--container-width);
   margin: 0 auto;
-  padding: 0 var(--spacing-md);
+  padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -43,15 +45,18 @@
   align-items: center;
 }
 
+.search-bar form {
+  position: relative;
+  width: 100%;
+}
+
 .search-input {
   width: 100%;
   padding: 0.75rem 2.5rem 0.75rem 1rem;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
-  color: white;
-  font-size: 0.95rem;
-  transition: all 0.3s ease;
+  color: var(--light-text);
 }
 
 .search-input::placeholder {
@@ -73,8 +78,6 @@
   border: none;
   color: rgba(255, 255, 255, 0.6);
   cursor: pointer;
-  padding: 0.5rem;
-  transition: all 0.3s ease;
 }
 
 .search-button:hover {
@@ -90,7 +93,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  transition: all 0.3s ease;
+  transition: var(--transition);
 }
 
 .logo:hover {
@@ -111,7 +114,7 @@
   font-weight: 500;
   padding: 0.5rem 1rem;
   border-radius: 8px;
-  transition: all 0.3s ease;
+  transition: var(--transition);
   position: relative;
 }
 
@@ -144,7 +147,7 @@
 
 .dropdown-content {
   position: absolute;
-  top: calc(100% + 0.5rem);
+  top: 100%;
   right: 0;
   background: white;
   min-width: 200px;
@@ -154,11 +157,12 @@
   opacity: 0;
   visibility: hidden;
   transform: translateY(-10px);
-  transition: all 0.3s ease;
+  transition: var(--transition);
   padding: 0.5rem 0;
-  z-index: 110;
+  z-index: 1000;
 }
 
+.dropdown.active .dropdown-content,
 .dropdown:hover .dropdown-content {
   opacity: 1;
   visibility: visible;
@@ -171,12 +175,8 @@
   text-decoration: none;
   display: flex;
   align-items: center;
-  justify-content: center; /* Центрируем текст */
-  gap: 0.5rem;
-  background: #f9f9f9; /* Светлый фон */
-  border-radius: 6px;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  justify-content: space-between;
+  transition: var(--transition);
 }
 
 .dropdown-item:first-child {
@@ -188,9 +188,9 @@
 }
 
 .dropdown-item:hover {
-  background: var(--accent-color); /* Акцентный цвет */
-  color: white; /* Белый текст */
-  transform: translateY(-2px); /* Лёгкое приподнимание */
+  background: var(--accent-color);
+  color: white;
+  transform: translateY(-2px);
 }
 
 .dropdown-divider {
@@ -207,8 +207,6 @@
   color: var(--light-text);
   font-size: 1.5rem;
   cursor: pointer;
-  padding: 0.5rem;
-  transition: all 0.3s ease;
 }
 
 .mobile-menu-button:hover {
@@ -230,7 +228,7 @@
     top: 100%;
     left: 0;
     right: 0;
-    background: rgba(44, 62, 80, 0.98);
+    background: var(--header-bg);
     padding: 1rem;
     flex-direction: column;
     gap: 0; /* Убрал отступы между пунктами меню */
@@ -316,7 +314,7 @@
 
   /* Исправление для кнопки Add Listing */
   .add-listing {
-    width: calc(100% - 2rem); /* Полная ширина минус отступы */
+    width: calc(100% - 2rem);
     margin: 0.5rem 1rem;
     text-align: center;
     display: block;
@@ -394,7 +392,7 @@
 
 /* Дополнительные эффекты при скролле */
 .header.scrolled {
-  background-color: rgba(44, 62, 80, 0.98);
+  background-color: var(--header-bg);
   padding: 0.75rem 0;
 }
 
@@ -415,7 +413,7 @@
   padding: 0.6rem 1.2rem;
   border-radius: 8px;
   font-weight: 500;
-  transition: all 0.3s ease;
+  transition: var(--transition);
 }
 
 .add-listing:hover {
@@ -423,7 +421,7 @@
   transform: translateY(-1px);
 }
 
-/* Стили для уведомлений */
+/* Стили для уведомлений
 .notification-badge {
   position: absolute;
   top: -5px;
@@ -432,10 +430,16 @@
   color: white;
   font-size: 0.75rem;
   padding: 2px 6px;
-  border-radius: 10px;
+  border-radius: 50%;
   min-width: 18px;
   text-align: center;
-}
+  font-weight: bold;
+  display: inline-block;
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: none; 
+} */
 
 /* Стили для кнопок авторизации */
 .auth-buttons {
@@ -449,7 +453,7 @@
   padding: 0.6rem 1.2rem;
   border-radius: 8px;
   font-weight: 500;
-  transition: all 0.3s ease;
+  transition: var(--transition);
 }
 
 .login-button {
@@ -511,18 +515,22 @@
   align-items: center;
 }
 
-/* Исправить z-index для выпадающего меню */
-.dropdown-content {
-  z-index: 1000; /* Увеличиваем z-index */
-}
-
+/* Объединяем общие стили для бейджей */
 .unread-badge {
-  background-color: #ff4444;
+  background-color: var(--accent-color);
   color: white;
   border-radius: 50%;
-  padding: 2px 6px;
+  padding: 2px 8px;
   font-size: 12px;
   margin-left: 8px;
+  min-width: 22px;
+  text-align: center;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  height: 22px;
+  position: relative;
+  top: -1px;
 }
 
 /* Добавьте эти стили к существующим */
@@ -548,4 +556,39 @@
     width: 100%;
     text-align: left;
   }
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1100;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  position: relative;
+  max-width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  color: var(--text-primary);
 }

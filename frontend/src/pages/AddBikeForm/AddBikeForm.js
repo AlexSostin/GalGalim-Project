@@ -221,21 +221,26 @@ const AddBikeForm = () => {
       formDataToSend.append("color", formData.color);
       formDataToSend.append("features", formData.features);
 
+      // Добавляем логирование изображений
+      console.log("Total images to send:", formData.images.length);
+
       // Отправляем все изображения
       if (formData.images && formData.images.length > 0) {
-        formDataToSend.append("image", formData.images[0]); // основное изображение
-        // Затем отправляем все изображения в массив images
-        formData.images.forEach((image) => {
+        // Изменяем способ отправки изображений
+        formData.images.forEach((image, index) => {
+          if (index === 0) {
+            console.log("Sending main image:", image.name);
+            formDataToSend.append("image", image);
+          }
+          console.log("Sending additional image:", image.name);
           formDataToSend.append("images", image);
         });
       }
 
-      console.log("Sending data to server:", {
-        url: "http://127.0.0.1:8000/api/bikes/create/",
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-        formData: Object.fromEntries(formDataToSend.entries()),
-      });
+      // Логируем все данные перед отправкой
+      for (let pair of formDataToSend.entries()) {
+        console.log(pair[0], pair[1]);
+      }
 
       const response = await fetch("http://127.0.0.1:8000/api/bikes/create/", {
         method: "POST",
@@ -245,15 +250,9 @@ const AddBikeForm = () => {
         body: formDataToSend,
       });
 
-      console.log("Response status:", response.status);
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || "Failed to add bike");
-      }
-
-      const data = await response.json();
-      console.log("Success response:", data);
+      // Логируем ответ сервера
+      const responseData = await response.json();
+      console.log("Server response:", responseData);
 
       // Добавляем здесь очистку формы
       const initialState = {

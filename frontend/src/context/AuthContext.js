@@ -34,6 +34,7 @@ export const AuthProvider = ({ children }) => {
             method: "GET",
             headers: {
               Authorization: `Bearer ${storedToken}`,
+              "Content-Type": "application/json",
             },
           }
         );
@@ -41,26 +42,34 @@ export const AuthProvider = ({ children }) => {
         if (response.ok) {
           const userData = await response.json();
           setUser(userData);
+          setToken(storedToken);
           setIsAdmin(userData.role === "admin");
+          localStorage.setItem("user", JSON.stringify(userData));
         } else {
           logout();
         }
       } catch (error) {
         console.error("Token verification failed:", error);
         logout();
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     verifyStoredToken();
   }, []);
 
   const login = async (userData, authToken) => {
-    setToken(authToken);
-    setUser(userData);
-    setIsAdmin(userData.role === "admin");
-    localStorage.setItem("token", authToken);
-    localStorage.setItem("user", JSON.stringify(userData));
+    try {
+      setToken(authToken);
+      setUser(userData);
+      setIsAdmin(userData.role === "admin");
+      localStorage.setItem("token", authToken);
+      localStorage.setItem("user", JSON.stringify(userData));
+    } catch (error) {
+      console.error("Login error:", error);
+      logout();
+    }
   };
 
   const logout = () => {
@@ -72,21 +81,18 @@ export const AuthProvider = ({ children }) => {
   };
 
   if (loading) {
-    return <div>Loading...</div>; // Можно заменить на спиннер или анимацию
+    return <div>Loading...</div>;
   }
 
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        token,
-        login,
-        logout,
-        isAdmin,
-        isAuthenticated: !!user,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  const value = {
+    user,
+    token,
+    login,
+    logout,
+    isAdmin,
+    isAuthenticated: !!user,
+    loading,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

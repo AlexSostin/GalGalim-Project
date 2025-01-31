@@ -8,7 +8,8 @@ from .views import (
     ProductSearchView, AdminUsersList, toggle_user_status, 
     update_user_role, get_user_profile, update_listing_status, delete_bike, user_settings,
     saved_bikes_list, remove_saved_bike, add_saved_bike,
-    create_chat, get_chat_info, chat_messages, get_user_chats, create_bike
+    create_chat, get_chat_info, chat_messages, get_user_chats, create_bike,
+    BikeAdminAPIView, BikeStatusAPIView, check_saved_bike, get_similar_bikes
 )
 
 urlpatterns = [
@@ -30,7 +31,7 @@ urlpatterns = [
     path('api/admin/users/', AdminUsersList.as_view(), name='admin-users'),
     path('api/admin/users/<int:pk>/toggle-status/', toggle_user_status, name='toggle-user-status'),
     path('api/admin/users/<int:pk>/update-role/', update_user_role, name='update-user-role'),
-    path('api/user/profile/', get_user_profile, name='user-profile'),
+    path('api/user/profile/', views.user_profile, name='user-profile'),
     path('api/admin/listings/<int:pk>/status/', update_listing_status, name='update-listing-status'),
     path('api/bikes/<int:pk>/delete/', delete_bike, name='delete_bike'),
     path('api/user/settings/', user_settings, name='user_settings'),
@@ -42,5 +43,9 @@ urlpatterns = [
     path('api/chats/<int:chat_id>/messages/', chat_messages, name='chat-messages'),
     path('api/chats/', get_user_chats, name='get-user-chats'),
     path('api/messages/unread-count/', views.get_unread_messages_count, name='unread-messages-count'),
+    path('admin/bikes/', BikeAdminAPIView.as_view()),
+    path('admin/bikes/<int:pk>/status/', BikeStatusAPIView.as_view()),
+    path('api/saved-bikes/check/<int:bike_id>/', check_saved_bike, name='check_saved_bike'),
+    path('api/bikes/similar/<int:bike_id>/', get_similar_bikes, name='get_similar_bikes'),
 ]
 

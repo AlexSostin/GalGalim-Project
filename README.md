@@ -1,3 +1,13 @@
+# GalGalim Project
+
+A full-stack e-commerce application for selling bicycles, built with:
+
+- Frontend: React.js
+- Backend: Django REST Framework
+- Authentication: JWT
+- Database: SQLite3
+- Real-time features: Django Channels
+
 Bike Store Application
 
 This is an e-commerce project for selling bicycles.
@@ -8,26 +18,25 @@ Follow the steps below to start the application.
 
                 Start the Backend Server
 
-1. Navigate to the root directory of the project: cd bike_store
+1.  Navigate to the root directory of the project: cd bike_store
 
-2. Navigate to the backend directory: cd backend
+2.  Navigate to the backend directory: cd backend
 
-3. Create a virtual environment: python -m venv venv
+3.  Create a virtual environment: python -m venv venv
 
-4. Activate the virtual environment: ./venv/Scripts/activate (Windows) or source venv/bin/activate (macOS/Linux)
+4.  Activate the virtual environment: ./venv/Scripts/activate (Windows) or source venv/bin/activate (macOS/Linux)
 
-5. Start the Django server: python manage.py runserver
-
+5.  Start the Django server: python manage.py runserver
 
                 Start the Frontend Server
 
     In a second terminal, perform the following steps:
 
-1. Navigate to the root directory of the project: cd bike_store
+6.  Navigate to the root directory of the project: cd bike_store
 
-2. Navigate to the frontend directory: cd frontend
+7.  Navigate to the frontend directory: cd frontend
 
-3. Start the React application: npm start 
+8.  Start the React application: npm start
 
     Access the Application
 
